@@ -1,0 +1,58 @@
+version: 2
+
+sources:
+  - name: raw                          # logical source name
+    database: raw                     # actual Snowflake database
+    schema: customers_schema           # actual schema name in Snowflake
+
+    tables:
+      - name: customers
+        description: "Raw customer master data containing personal and demographic details."
+        columns:
+          - name: customer_id
+            description: "Unique identifier for each customer"
+            tests:
+              - not_null
+              - unique
+          - name: email
+            description: "Customer email address"
+            tests:
+              - not_null
+          - name: annual_income
+            description: "Annual income of the customer"
+
+      - name: accounts
+        description: "Customer account details table containing account metadata and status."
+        columns:
+          - name: account_id
+            description: "Unique account identifier"
+            tests:
+              - not_null
+              - unique
+          - name: customer_id
+            description: "Foreign key linked to customers table"
+            tests:
+              - not_null
+          - name: account_type
+            description: "Type of the bank account (Savings, Current, etc.)"
+          - name: balance
+            description: "Current account balance"
+
+      - name: transactions
+        description: "Transactional data capturing all customer account transactions."
+        columns:
+          - name: transaction_id
+            description: "Unique transaction identifier"
+            tests:
+              - not_null
+              - unique
+          - name: account_id
+            description: "Foreign key linked to accounts table"
+            tests:
+              - not_null
+          - name: transaction_date
+            description: "Date when the transaction occurred"
+          - name: transaction_amount
+            description: "Amount of the transaction"
+          - name: transaction_type
+            description: "Type of transaction (Credit/Debit/Transfer)"
